@@ -1,25 +1,40 @@
 ﻿using System.Numerics;
-using System.Text;
 using RsaImplementation;
 
 var rsa = new Rsa(2048);
 var publicKey = rsa.PrintPublicKey();
 var privateKey = rsa.PrintPrivateKey();
 
-Console.WriteLine(publicKey);
-Console.WriteLine(privateKey);
+// Console.WriteLine(publicKey);
+// Console.WriteLine(privateKey);
+//
+// var rsa2 = new Rsa(publicKey, privateKey);
+//
+// Console.WriteLine("TEST MESSAGE 123123");
+// var dataToEncrypt = new BigInteger("TEST MESSAGE 123123"u8.ToArray());
+//
+// var encrypted = rsa2.Encrypt(dataToEncrypt);
+// Console.WriteLine("ENCRYPTED");
+// encrypted.PrintToUtf8();
+//
+// var decrypted = rsa2.Decrypt(encrypted);
+// Console.WriteLine("DECRYPTED");
+// decrypted.PrintToUtf8();
+
 
 Console.WriteLine("TEST MESSAGE 123123");
-var dataToEncrypt = new BigInteger("TEST MESSAGE 123123"u8.ToArray());
+var padded = OAEP.Encode("TEST MESSAGE 123123".ToByteArray());
+Console.WriteLine("Padded: ");
+padded.PrintToBase64();
+var paddedEncrypted = rsa.Encrypt(new BigInteger(padded));
 
-var encrypted = rsa.Encrypt(dataToEncrypt);
-var encryptedInBytes = encrypted.ToByteArray();
-var encryptedInText = Encoding.UTF8.GetString(encryptedInBytes);
-Console.WriteLine("ENCRYPTED");
-Console.WriteLine(encryptedInText);
+Console.WriteLine("Padded Encrypted: ");
+paddedEncrypted.PrintToUtf8();
 
-var decrypted = rsa.Decrypt(encrypted);
-var decryptedInBytes = decrypted.ToByteArray();
-var decryptedInText = Encoding.UTF8.GetString(decryptedInBytes);
-Console.WriteLine("DECRYPTED");
-Console.WriteLine(decryptedInText);
+var paddedDecrypted = rsa.Decrypt(paddedEncrypted);
+Console.WriteLine("Padded Decrypted: ");
+paddedDecrypted.PrintToBase64();
+
+var unpadded = OAEP.Decode(paddedDecrypted.ToByteArray());
+Console.WriteLine("Unpadded: ");
+unpadded.PrintToUtf8();
