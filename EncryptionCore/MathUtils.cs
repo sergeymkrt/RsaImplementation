@@ -1,7 +1,7 @@
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace RsaImplementation;
+namespace EncryptionCore;
 
 public static class MathUtils
 {

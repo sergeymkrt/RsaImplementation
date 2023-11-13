@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RsaImplementation", "RsaImplementation\RsaImplementation.csproj", "{45A432E5-7202-4A63-9586-D8E3EA19BCB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{EE8263E3-1F8C-42F8-832E-DC52509F5ED9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionCore", "EncryptionCore\EncryptionCore.csproj", "{4F90DD43-6667-45D8-9E8D-3B77A3786C63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{45A432E5-7202-4A63-9586-D8E3EA19BCB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45A432E5-7202-4A63-9586-D8E3EA19BCB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45A432E5-7202-4A63-9586-D8E3EA19BCB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE8263E3-1F8C-42F8-832E-DC52509F5ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE8263E3-1F8C-42F8-832E-DC52509F5ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE8263E3-1F8C-42F8-832E-DC52509F5ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE8263E3-1F8C-42F8-832E-DC52509F5ED9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F90DD43-6667-45D8-9E8D-3B77A3786C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F90DD43-6667-45D8-9E8D-3B77A3786C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F90DD43-6667-45D8-9E8D-3B77A3786C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F90DD43-6667-45D8-9E8D-3B77A3786C63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

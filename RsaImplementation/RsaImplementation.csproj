@@ -7,6 +7,9 @@
         <RootNamespace>RsaImplementation</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
+      <ProjectReference Include="..\EncryptionCore\EncryptionCore.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
     </ItemGroup>
 </Project>

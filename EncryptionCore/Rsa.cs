@@ -2,7 +2,7 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace RsaImplementation;
+namespace EncryptionCore;
 
 public class Rsa
 {

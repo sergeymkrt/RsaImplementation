@@ -3,7 +3,7 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 
-namespace RsaImplementation;
+namespace EncryptionCore;
 
 /// <summary>
 /// MGF1 implementation

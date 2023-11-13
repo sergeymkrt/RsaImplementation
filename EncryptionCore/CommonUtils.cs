@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Text;
 
-namespace RsaImplementation;
+namespace EncryptionCore;
 
 public static class CommonUtils
 {
