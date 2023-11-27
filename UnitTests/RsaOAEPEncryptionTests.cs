@@ -13,17 +13,13 @@ public class RsaOAEPEncryptionTests
         var originalData = "Hello, OAEP!"u8.ToArray();
         
         var rsa = new Rsa(2048);
-        // var publicKey = rsa.PrintPublicKey();
-        // var privateKey = rsa.PrintPrivateKey();
         
         // Act
-        var paddedData = OAEP.Encode(originalData);
-        var encryptedData = rsa.Encrypt(new BigInteger(paddedData));
-        
-        var decryptedData = OAEP.Decode(rsa.Decrypt(encryptedData).ToByteArray());
+        var encrypted = rsa.EncryptWithOAEP(new BigInteger(originalData));
+        var decrypted = rsa.DecryptWithOAEP(encrypted);
         
         // Assert
-        CollectionAssert.AreEqual(originalData, decryptedData);
+        CollectionAssert.AreEqual(originalData, decrypted.ToByteArray());
     }
 
     [Test]
@@ -38,15 +34,15 @@ public class RsaOAEPEncryptionTests
         // var privateKey = rsa.PrintPrivateKey();
         
         // Act
-        var encryptedData1 = rsa.Encrypt(new BigInteger(OAEP.Encode(data1)));
-        var encryptedData2 = rsa.Encrypt(new BigInteger(OAEP.Encode(data2)));
+        var encryptedData1 = rsa.EncryptWithOAEP(new BigInteger(data1));
+        var encryptedData2 = rsa.EncryptWithOAEP(new BigInteger(data2));
         
-        var decryptedData1 = OAEP.Decode(rsa.Decrypt(encryptedData1).ToByteArray());
-        var decryptedData2 = OAEP.Decode(rsa.Decrypt(encryptedData2).ToByteArray());
+        var decryptedData1 = rsa.DecryptWithOAEP(encryptedData1);
+        var decryptedData2 = rsa.DecryptWithOAEP(encryptedData2);
         
         // Assert
-        CollectionAssert.AreEqual(data1, decryptedData1);
-        CollectionAssert.AreEqual(data2, decryptedData2);
+        CollectionAssert.AreEqual(data1, decryptedData1.ToByteArray());
+        CollectionAssert.AreEqual(data2, decryptedData2.ToByteArray());
     }
 
     [Test]
@@ -60,10 +56,10 @@ public class RsaOAEPEncryptionTests
         // var privateKey = rsa.PrintPrivateKey();
         
         // Act
-        var encryptedData = rsa.Encrypt(new BigInteger(OAEP.Encode(emptyData)));
-        var decryptedData = OAEP.Decode(rsa.Decrypt(encryptedData).ToByteArray());
+        var encryptedData = rsa.EncryptWithOAEP(new BigInteger(emptyData));
+        var decryptedData = rsa.DecryptWithOAEP(encryptedData);
         
         // Assert
-        CollectionAssert.AreEqual(emptyData, decryptedData);
+        CollectionAssert.AreEqual(emptyData, decryptedData.ToByteArray());
     }
 }

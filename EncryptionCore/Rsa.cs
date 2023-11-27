@@ -13,7 +13,7 @@ public class Rsa
     private readonly BigInteger _e;
     private readonly BigInteger _d;
     private bool _isImported;
-    private int _keySize;
+    public int KeySize { get; set; }
 
     protected Rsa()
     {
@@ -27,7 +27,7 @@ public class Rsa
         _e = CalculateE(Phi);
         _d = CalculateD(_e, Phi);
         _isImported = false;
-        _keySize = keysize;
+        KeySize = keysize;
     }
 
     public Rsa(string publicKey, string privateKey)
@@ -41,7 +41,7 @@ public class Rsa
         _e = new BigInteger(eBytes);
         _d = new BigInteger(dBytes);
         _isImported = true;
-        _keySize = _n.ToByteArray().Length * 8;
+        KeySize = _n.ToByteArray().Length * 8;
     }
 
     public static Rsa ImportFromPath(string publicKeyPath, string privateKeyPath)
@@ -109,20 +109,48 @@ public class Rsa
 
     public BigInteger Encrypt(BigInteger message)
     {
-        if (message >= _n)
+        //check if message bitsize is smaller than n
+        if (message.ToByteArray().Length > KeySize / 8)
         {
             throw new ArgumentException("Message is too large to be encrypted with the given public key.");
         }
+        
         return BigInteger.ModPow(message, _e, _n);
+    }
+    
+    public BigInteger EncryptWithOAEP(BigInteger message)
+    {
+        //check if message bitsize is smaller than n
+        if (message.ToByteArray().Length > KeySize / 8)
+        {
+            throw new ArgumentException("Message is too large to be encrypted with the given public key.");
+        }
+        
+        var paddedMessage = OAEP.Encode(message.ToByteArray(), KeySize);
+        return BigInteger.ModPow(new BigInteger(paddedMessage), _e, _n);
     }
 
     public BigInteger Decrypt(BigInteger encryptedMessage)
     {
-        if (encryptedMessage >= _n)
+        if (encryptedMessage.ToByteArray().Length > KeySize / 8)
         {
-            throw new ArgumentException("Encrypted message is too large to be decrypted with the given private key.");
+            throw new ArgumentException("Message is too large to be encrypted with the given public key.");
         }
+        
         return BigInteger.ModPow(encryptedMessage, _d, _n);
+    }
+    
+    public BigInteger DecryptWithOAEP(BigInteger encryptedMessage)
+    {
+        if (encryptedMessage.ToByteArray().Length > KeySize / 8)
+        {
+            throw new ArgumentException("Message is too large to be encrypted with the given public key.");
+        }
+        
+        var decrypted = BigInteger.ModPow(encryptedMessage, _d, _n);
+        var decryptedPadded = decrypted.ToByteArray();
+        var decryptedMessage = OAEP.Decode(decryptedPadded, KeySize);
+        return new BigInteger(decryptedMessage);
     }
     
 }
