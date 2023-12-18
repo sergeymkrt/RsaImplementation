@@ -41,7 +41,7 @@ public static class MathUtils
 
         return false;
     }
-    
+
     public static BigInteger GenerateRandomPrime(int keySize)
     {
         var rng = RandomNumberGenerator.Create();
@@ -59,8 +59,8 @@ public static class MathUtils
                 return candidate;
         }
     }
-    
-    
+
+
     public static void ExtendedEuclidean(BigInteger a, BigInteger b, out BigInteger gcd, out BigInteger x, out BigInteger y)
     {
         if (a == 0)
@@ -76,6 +76,11 @@ public static class MathUtils
             x = y - (b / a) * x;
             y = temp;
         }
+    }
+
+    public static bool IsLittleEndian()
+    {
+        return BitConverter.IsLittleEndian;
     }
 
 }

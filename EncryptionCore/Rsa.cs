@@ -18,11 +18,11 @@ public class Rsa
     protected Rsa()
     {
     }
-    
+
     public Rsa(int keysize)
     {
-        _p = MathUtils.GenerateRandomPrime(keysize/2);
-        _q = MathUtils.GenerateRandomPrime(keysize/2);
+        _p = MathUtils.GenerateRandomPrime(keysize / 2);
+        _q = MathUtils.GenerateRandomPrime(keysize / 2);
         _n = _p * _q;
         _e = CalculateE(Phi);
         _d = CalculateD(_e, Phi);
@@ -50,11 +50,11 @@ public class Rsa
         var privateKey = CommonUtils.ReadFromFile(privateKeyPath);
         return new Rsa(publicKey, privateKey);
     }
-    
+
     private BigInteger CalculateE(BigInteger phiN)
     {
         var rng = RandomNumberGenerator.Create();
-        
+
         var bitLength = 17; // Fixed bit length for e
         var byteLength = (int)Math.Ceiling(bitLength / 8.0);
 
@@ -69,8 +69,8 @@ public class Rsa
                 return candidate;
         }
     }
-    
-    
+
+
     private BigInteger CalculateD(BigInteger e, BigInteger phiN)
     {
         BigInteger gcd, x, y;
@@ -94,7 +94,7 @@ public class Rsa
         sb.AppendLine("-----END RSA PUBLIC KEY-----");
         return sb.ToString();
     }
-    
+
     public string PrintPrivateKey()
     {
         var sb = new StringBuilder();
@@ -109,15 +109,20 @@ public class Rsa
 
     public BigInteger Encrypt(BigInteger message)
     {
+        if (message.ToByteArray() == Array.Empty<byte>())
+        {
+            return message;
+        }
+
         //check if message bitsize is smaller than n
         if (message.ToByteArray().Length > KeySize / 8)
         {
             throw new ArgumentException("Message is too large to be encrypted with the given public key.");
         }
-        
+
         return BigInteger.ModPow(message, _e, _n);
     }
-    
+
     public BigInteger EncryptWithOAEP(BigInteger message)
     {
         //check if message bitsize is smaller than n
@@ -125,32 +130,43 @@ public class Rsa
         {
             throw new ArgumentException("Message is too large to be encrypted with the given public key.");
         }
-        
+
         var paddedMessage = OAEP.Encode(message.ToByteArray(), KeySize);
-        return BigInteger.ModPow(new BigInteger(paddedMessage), _e, _n);
+
+        // Reversing the message to avoid negative numbers
+        var reversedMessage = paddedMessage.Reverse().ToArray();
+        return BigInteger.ModPow(new BigInteger(reversedMessage), _e, _n);
     }
 
     public BigInteger Decrypt(BigInteger encryptedMessage)
     {
+        if (encryptedMessage.ToByteArray() == Array.Empty<byte>())
+        {
+            return encryptedMessage;
+        }
+
         if (encryptedMessage.ToByteArray().Length > KeySize / 8)
         {
             throw new ArgumentException("Message is too large to be encrypted with the given public key.");
         }
-        
+
         return BigInteger.ModPow(encryptedMessage, _d, _n);
     }
-    
-    public BigInteger DecryptWithOAEP(BigInteger encryptedMessage)
+
+    public byte[] DecryptWithOAEP(BigInteger encryptedMessage)
     {
         if (encryptedMessage.ToByteArray().Length > KeySize / 8)
         {
             throw new ArgumentException("Message is too large to be encrypted with the given public key.");
         }
-        
-        var decrypted = BigInteger.ModPow(encryptedMessage, _d, _n);
-        var decryptedPadded = decrypted.ToByteArray();
-        var decryptedMessage = OAEP.Decode(decryptedPadded, KeySize);
-        return new BigInteger(decryptedMessage);
+        var decrypted = BigInteger.ModPow(encryptedMessage, _d, _n).ToByteArray();
+
+        //Reversing back to original order
+
+        var decryptedReversed = decrypted.Reverse().ToArray();
+        var decryptedMessage = OAEP.Decode(decryptedReversed, KeySize);
+
+        return decryptedMessage;
     }
-    
+
 }
